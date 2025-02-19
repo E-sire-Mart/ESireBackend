@@ -57,10 +57,16 @@ const userSchema = new mongoose.Schema(
     phone_number: {
       type: String,
       trim: true,
-      // validate: {
-      //     validator: (value) => /^\d{10}$/.test(value),
-      //     message: 'Invalid phone number format',
-      // },
+    },
+    phoneVerify: {
+      type: Boolean,
+      default: false,
+    },
+    phonVerificationOtp: {
+      type: String,
+    },
+    phoneVerificationExpires: {
+      type: Date,
     },
     is_owner: {
       type: Boolean,

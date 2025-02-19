@@ -5,44 +5,19 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET, CUSTOMER_URL, SHOP_URL, API_URL } = process.env;
 const crypto = require("crypto");
 const sendEmail = require("../utils/emailConnection");
+const { PhoneNumberUtil } = require('google-libphonenumber');
+// Generate verify token for verificating email
 const generateVerifyToken = () => {
   return crypto.randomBytes(32).toString("hex");
 };
 
+// Generate OPT code for verificating phone number
+const generateOTP = () => {
+  return MAth.floor(100000 + Math.random() * 900000).toString();
+}
+
+
 const bcrypt = require("bcrypt");
-
-const ownerRegister = async (req, res) => {
-  try {
-    const { email, password, first_name, last_name, phone_number, is_owner } =
-      req.body.data.attributes;
-    const user = new User({
-      email,
-      username: email,
-      password,
-      first_name,
-      last_name,
-      phone_number,
-      is_owner,
-    });
-
-    try {
-      user.verify_token = generateVerifyToken();
-      await user.save();
-      await sendEmail(email, user.verify_token, API_URL, "verification");
-      return res.status(201).json({ message: "User registered successfully" });
-    } catch (validationError) {
-      console.log(validationError);
-      let message = "Validation error";
-      for (let key in validationError.errors) {
-        message = validationError.errors[key].message;
-      }
-      return res.status(400).json({ message });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-};
 
 const userRegister = async (req, res) => {
   try {
@@ -112,6 +87,39 @@ const userRegister = async (req, res) => {
   }
 };
 
+const ownerRegister = async (req, res) => {
+  try {
+    const { email, password, first_name, last_name, phone_number, is_owner } =
+      req.body.data.attributes;
+    const user = new User({
+      email,
+      username: email,
+      password,
+      first_name,
+      last_name,
+      phone_number,
+      is_owner,
+    });
+
+    try {
+      user.verify_token = generateVerifyToken();
+      await user.save();
+      await sendEmail(email, user.verify_token, API_URL, "verification");
+      return res.status(201).json({ message: "User registered successfully" });
+    } catch (validationError) {
+      console.log(validationError);
+      let message = "Validation error";
+      for (let key in validationError.errors) {
+        message = validationError.errors[key].message;
+      }
+      return res.status(400).json({ message });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 const userRegisterApp = async (req, res) => {
   try {
     const { email, password, first_name, last_name, phone_number, username } =
@@ -124,11 +132,10 @@ const userRegisterApp = async (req, res) => {
       last_name,
       phone_number,
     });
-
     try {
-      user.verify_token = generateVerifyToken();
-      await user.save();
-      await sendEmail(email, user.verify_token, API_URL, "verification");
+      user.phonVerificationOtp = generateVerifyToken();
+      const expireTime = Date.random() + 5 * 60 * 1000;
+      await sendEmail(user.phone_number, user.verify_token, API_URL, "phoneverification");
       // return res.status(201).json({ message: 'User registered successfully' });
       return res.status(201).json({
         message: "Success",

@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
   requireTLS: true,
   port: 465,
   debug: true,
-  connectionTimeout: 10000,
+  connectionTimeout: 30000,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 const sendEmail = async (email, username, url, emailType) => {
   console.log(url);
   let mailOptions = {
-    from: "testuser@e-siremart.com",
+    from: "noreply@e-siremart.com",
     to: email,
     subject: "",
     html: "",
@@ -48,6 +48,7 @@ const sendEmail = async (email, username, url, emailType) => {
   }
 
   try {
+    console.log(mailOptions);
     await transporter.sendMail(mailOptions);
     console.log(`${emailType} email sent successfully to ${email}.`);
     return true;
