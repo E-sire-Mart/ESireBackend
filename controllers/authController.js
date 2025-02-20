@@ -5,17 +5,14 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET, CUSTOMER_URL, SHOP_URL, API_URL } = process.env;
 const crypto = require("crypto");
 const sendEmail = require("../utils/emailConnection");
-const { PhoneNumberUtil } = require('google-libphonenumber');
+const verifyPhone = require("../utils/phoneConnection");
+const { PhoneNumberUtil } = require("google-libphonenumber");
+
+const phoneUtil = PhoneNumberUtil.getInstance();
 // Generate verify token for verificating email
 const generateVerifyToken = () => {
   return crypto.randomBytes(32).toString("hex");
 };
-
-// Generate OPT code for verificating phone number
-const generateOTP = () => {
-  return MAth.floor(100000 + Math.random() * 900000).toString();
-}
-
 
 const bcrypt = require("bcrypt");
 
@@ -122,38 +119,38 @@ const ownerRegister = async (req, res) => {
 
 const userRegisterApp = async (req, res) => {
   try {
-    const { email, password, first_name, last_name, phone_number, username } =
-      req.body;
-    const user = new User({
-      email,
-      username: username,
-      password,
-      first_name,
-      last_name,
-      phone_number,
-    });
-    try {
-      user.phonVerificationOtp = generateVerifyToken();
-      const expireTime = Date.random() + 5 * 60 * 1000;
-      await sendEmail(user.phone_number, user.verify_token, API_URL, "phoneverification");
-      // return res.status(201).json({ message: 'User registered successfully' });
-      return res.status(201).json({
-        message: "Success",
-        username,
-        email,
-        phone_number,
+    const { email, password, first_name, last_name, phone_number } = req.body;
+    const number = PhoneNumberUtil.parse(phone_number);
+    if (!phoneUtil.isValidNumber(number)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid phone number format." });
+    }
+    const isValid = await verifyPhone(username, phone_number);
+    if (isValid.message !== "success") {
+      return res.status(500).json({
+        success: false,
+        message: "Failed sending verify code to phone",
       });
-    } catch (validationError) {
-      console.log(validationError);
-      let message = "Validation error";
-      for (let key in validationError.errors) {
-        message = validationError.errors[key].message;
-      }
-      return res.status(400).json({ message });
+    } else {
+      const user = await User.create({
+        email,
+        username: first_name + " " + last_name,
+        password,
+        first_name,
+        last_name,
+        phone_number,
+        phoneVerify: false,
+        phoneVerificationOtp: otp,
+        phoneVerificationExpires: expireTime,
+      });
+      res
+        .status(200)
+        .json({ success: "success", sessionId: isValid.sessionId });
     }
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    console.lod("Signup error:", error.message);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

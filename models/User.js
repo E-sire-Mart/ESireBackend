@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    phonVerificationOtp: {
+    phoneVerificationOtp: {
       type: String,
     },
     phoneVerificationExpires: {
