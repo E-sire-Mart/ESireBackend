@@ -1,34 +1,36 @@
-// middleware/auth.js
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = process.env;
+import jwt from 'jsonwebtoken'
 
-const authenticate = (req, res, next) => {
-  const authTokenHeader = req?.headers?.authorization;
+const auth = async(request,response,next)=>{
+    try {
+        const token = request.cookies.accessToken || request?.headers?.authorization?.split(" ")[1]
+       
+        if(!token){
+            return response.status(401).json({
+                message : "Provide token"
+            })
+        }
 
-  if (!authTokenHeader) {
-    console.error("Unauthorized - Missing Authorization Header");
-    
-    return res
-      .status(401)
-      .json({ message: "Unauthorized - Missing Authorization Header" });
-  }
+        const decode = await jwt.verify(token,process.env.SECRET_KEY_ACCESS_TOKEN)
 
-  const [bearer, authToken] = authTokenHeader.split(" ");
+        if(!decode){
+            return response.status(401).json({
+                message : "unauthorized access",
+                error : true,
+                success : false
+            })
+        }
 
-  if (bearer !== "Bearer" || !authToken) {
-    return res
-      .status(401)
-      .json({ message: "Unauthorized - Invalid Authorization Header Format" });
-  }
+        request.userId = decode.id
 
-  try {
-    const decoded = jwt.verify(authToken, JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    console.error("JWT Verification Error:", error);
-    return res.status(401).json({ message: "Unauthorized - Invalid Token" });
-  }
-};
+        next()
 
-module.exports = { authenticate };
+    } catch (error) {
+        return response.status(500).json({
+            message : "You have not login",///error.message || error,
+            error : true,
+            success : false
+        })
+    }
+}
+
+export default auth
