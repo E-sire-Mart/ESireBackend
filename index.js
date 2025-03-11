@@ -5,6 +5,8 @@ dotenv.config();
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import helmet from "helmet";
+import { Server } from "socket.io";
+const http = require('http');
 import connectDB from "./config/connectDB.js";
 import userRouter from "./route/user.route.js";
 import categoryRouter from "./route/category.route.js";
@@ -16,6 +18,14 @@ import addressRouter from "./route/address.route.js";
 import orderRouter from "./route/order.route.js";
 
 const app = express();
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  }
+})
 app.use(
   cors({
     credentials: true,
@@ -30,7 +40,17 @@ app.use(
     crossOriginResourcePolicy: false,
   })
 );
+// 
+io.on("connection", (socket) => {
+  console.log(`User connected: ${socket.id}`);
 
+  socket.on("message", (data) => {
+    console.log(`Message received: ${data}`)
+  })
+  socket.on("disconnect", () => {
+    console.log(`User disconnected: ${socket.id}`);
+  })
+})
 const PORT = 8080 || process.env.PORT;
 
 app.get("/", (request, response) => {

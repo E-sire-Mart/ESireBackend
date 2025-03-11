@@ -29,13 +29,15 @@ export async function registerUserController(request, response) {
 
     const salt = await bcryptjs.genSalt(10);
     const hashPassword = await bcryptjs.hash(password, salt);
-
     const otp = generatedOtp();
+    const expireTime = Date.now() + 1 * 60 * 60 * 1000; // 1hr
+    console.log(Date.now());
     const payload = {
       name,
       email,
       password: hashPassword,
       email_otp: otp,
+      email_otp_expired: expireTime,
     };
 
     const newUser = new UserModel(payload);
@@ -48,7 +50,7 @@ export async function registerUserController(request, response) {
         data: null,
       });
     }
-    await newUser.save();
+    const save = await newUser.save();
     return response.json({
       message: "User registered successfully!!!",
       error: false,
@@ -67,27 +69,52 @@ export async function registerUserController(request, response) {
 export async function verifyEmailController(request, response) {
   console.log(request.body);
   try {
-    const { code } = request.body;
-
-    const user = await UserModel.findOne({ otp: code });
-
+    const { code, email } = request.body;
+    console.log(Date.now());
+    const user = await UserModel.findOne({ email: email });
+    console.log(code, email);
+    console.log(user);
     if (!user) {
+      return response.status(400).json({
+        message: "Not Register User!",
+        error: true,
+        success: false,
+        data: {},
+      });
+    }
+    console.log("not find user!");
+    if (user.email_otp != code) {
       return response.status(400).json({
         message: "Invalid code",
         error: true,
         success: false,
+        data: {},
       });
     }
+    console.log("not verify otp");
+    console.log(user.email_otp_expired);
+    console.log(Date.now());
+    if (user.email_otp_expired < Date.now()) {
+      console.log("expired code!");
+      return response.status(400).json({
+        message: "Expired code",
+        error: true,
+        success: false,
+        data: {},
+      });
+    }
+    const payload = {
+      email_otp: undefined,
+      email_otp_expired: undefined,
+      verify_email: true,
+      last_long_date: Date.now(),
+    };
 
-    const updateUser = await UserModel.updateOne(
-      { _id: code },
-      {
-        verify_email: true,
-      }
-    );
+    const newUser = new UserModel(payload);
+    console.log("expired otp time!");
     const accesstoken = await generatedAccessToken(user._id);
     const refreshToken = await genertedRefreshToken(user._id);
-
+    console.log(refreshToken);
     const cookiesOption = {
       httpOnly: true,
       secure: true,
@@ -95,20 +122,14 @@ export async function verifyEmailController(request, response) {
     };
     response.cookie("accessToken", accesstoken, cookiesOption);
     response.cookie("refreshToken", refreshToken, cookiesOption);
-
     return response.json({
-      message: "Login successfully",
+      message: "verify Email Done and Login successfully!",
       error: false,
       success: true,
       data: {
         accesstoken,
         refreshToken,
       },
-    });
-    return response.json({
-      message: "Verify email done",
-      success: true,
-      error: false,
     });
   } catch (error) {
     return response.status(500).json({

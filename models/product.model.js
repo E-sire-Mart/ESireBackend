@@ -4,6 +4,9 @@ const productSchema = new mongoose.Schema({
     name : {
         type : String,
     },
+    vendor_id: {
+        type: String,
+    },
     image : {
         type : Array,
         default : []

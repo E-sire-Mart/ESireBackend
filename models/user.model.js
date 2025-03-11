@@ -54,6 +54,12 @@ const userSchema = new mongoose.Schema(
         ref: "address",
       },
     ],
+    products: [
+      {
+        type:mongoose.Schema.ObjectId,
+        ref: "product"
+      }
+    ],
     shopping_cart: [
       {
         type: mongoose.Schema.ObjectId,
@@ -76,7 +82,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["ADMIN", "USER"],
+      enum: ["VENDOR", "USER"],
       default: "USER",
     },
   },

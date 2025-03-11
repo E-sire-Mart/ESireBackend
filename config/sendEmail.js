@@ -29,20 +29,14 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmail = async (sendTo, name, otp, verifyType) => {
-  console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS);
   console.log("sendTo: ", sendTo);
-  //   console.log("subject: ", subject);
-  //   console.log("html: ", html);
   let mailOptions = {
     from: "noreply@e-siremart.com",
     to: sendTo,
     subject: "Verify email from E-Sire Mart",
     html: verifyEmailTemplate(name, otp, verifyType),
   };
-  console.log(mailOptions);
   try {
-    console.log(otp);
-    console.log(mailOptions);
     await transporter.sendMail(mailOptions);
     console.log(`email sent successfully to ${sendTo}.`);
     return true;
