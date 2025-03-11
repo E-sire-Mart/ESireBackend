@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import helmet from "helmet";
 import { Server } from "socket.io";
-const http = require('http');
+import http from 'http';
 import connectDB from "./config/connectDB.js";
 import userRouter from "./route/user.route.js";
 import categoryRouter from "./route/category.route.js";
