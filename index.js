@@ -6,8 +6,8 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import helmet from "helmet";
 import bodyParser from "body-parser";
-import { Server } from "socket.io";
-import http from 'http';
+// import { Server } from "socket.io";
+// import http from 'http';
 import connectDB from "./config/connectDB.js";
 import userRouter from "./route/user.route.js";
 import categoryRouter from "./route/category.route.js";
@@ -20,7 +20,7 @@ import orderRouter from "./route/order.route.js";
 
 const app = express();
 
-const server = http.createServer(app);
+// const server = http.createServer(app);
 const PORT = process.env.PORT || 8080;
 
 const allowedOrigins = [process.env.FRONTEND_URL, "http://localhost:3000"]
@@ -52,24 +52,24 @@ app.use(
 );
 
 
-const io = new Server(server, {
-  cors: {
-    origin: allowedOrigins,
-    methods: ["GET", "POST"]
-  }
-})
+// const io = new Server(server, {
+//   cors: {
+//     origin: allowedOrigins,
+//     methods: ["GET", "POST"]
+//   }
+// })
 
 // socket.io setup
-io.on("connection", (socket) => {
-  console.log(`User connected: ${socket.id}`);
+// io.on("connection", (socket) => {
+//   console.log(`User connected: ${socket.id}`);
 
-  socket.on("message", (data) => {
-    console.log(`Message received: ${data}`)
-  })
-  socket.on("disconnect", () => {
-    console.log(`User disconnected: ${socket.id}`);
-  })
-})
+//   socket.on("message", (data) => {
+//     console.log(`Message received: ${data}`)
+//   })
+//   socket.on("disconnect", () => {
+//     console.log(`User disconnected: ${socket.id}`);
+//   })
+// })
 
 app.use("/api/user", userRouter);
 app.use("/api/category", categoryRouter);
