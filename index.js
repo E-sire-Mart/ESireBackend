@@ -40,6 +40,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions)); // Enable CORS with options
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(
@@ -86,6 +87,11 @@ app.get("/", (request, response) => {
 });
 
 app.use((error, req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://e-sirefront-end-web.vercel.app");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
   console.log("Error: ", error.message);
   res.status(500).json({error: error.message})
 });
