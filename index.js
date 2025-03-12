@@ -5,6 +5,7 @@ dotenv.config();
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import helmet from "helmet";
+import bodyParser from "body-parser";
 import { Server } from "socket.io";
 import http from 'http';
 import connectDB from "./config/connectDB.js";
@@ -39,6 +40,7 @@ const corsOptions = {
 
 
 app.use(cors(corsOptions)); // Enable CORS with options
+app.use(bodyParser.json({ type: "application/vnd.api+json", strict: false })); // Parse JSON bodies with specific MIME type
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
