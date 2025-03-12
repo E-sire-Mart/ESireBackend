@@ -3,11 +3,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 import cookieParser from "cookie-parser";
-import morgan from "morgan";
+// import morgan from "morgan";
 import helmet from "helmet";
 import bodyParser from "body-parser";
-// import { Server } from "socket.io";
-// import http from 'http';
+import { Server } from "socket.io";
+import http from 'http';
 import connectDB from "./config/connectDB.js";
 import userRouter from "./route/user.route.js";
 import categoryRouter from "./route/category.route.js";
@@ -20,22 +20,19 @@ import orderRouter from "./route/order.route.js";
 
 const app = express();
 
-// const server = http.createServer(app);
-const PORT = process.env.PORT || 8080;
+const server = http.createServer(app);
 
-const allowedOrigins = [process.env.FRONTEND_URL, "http://localhost:3000"]
+// const allowedOrigins = [process.env.FRONTEND_URL, "http://localhost:3000"]
 const corsOptions = {
+
   origin: function (origin, callback) {
-    if(!origin || allowedOrigins.includes(origin)){
+
       callback(null, true); // Allow requests from all origins
-    }
-    else {
-      callback(new Error("Not allowed by CORS"));
-    }
+
   },
+
   credentials: true, // Allow credentials (cookies, HTTP authentication)
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  // methods: ["GET", "POST", "PUT", "DELETE"],
 };
 
 
@@ -44,7 +41,7 @@ app.use(bodyParser.json({ type: "application/vnd.api+json", strict: false })); /
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
@@ -52,24 +49,23 @@ app.use(
 );
 
 
-// const io = new Server(server, {
-//   cors: {
-//     origin: allowedOrigins,
-//     methods: ["GET", "POST"]
-//   }
-// })
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  }
+})
 
 // socket.io setup
-// io.on("connection", (socket) => {
-//   console.log(`User connected: ${socket.id}`);
+io.on("connection", (socket) => {
+  console.log(`User connected: ${socket.id}`);
 
-//   socket.on("message", (data) => {
-//     console.log(`Message received: ${data}`)
-//   })
-//   socket.on("disconnect", () => {
-//     console.log(`User disconnected: ${socket.id}`);
-//   })
-// })
+  socket.on("message", (data) => {
+    console.log(`Message received: ${data}`)
+  })
+  socket.on("disconnect", () => {
+    console.log(`User disconnected: ${socket.id}`);
+  })
+})
 
 app.use("/api/user", userRouter);
 app.use("/api/category", categoryRouter);
@@ -88,15 +84,18 @@ app.get("/", (request, response) => {
   });
 });
 
-app.use((error, req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://e-sirefront-end-web.vercel.app");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-  console.log("Error: ", error.message);
-  res.status(500).json({error: error.message})
-});
+// app.use((error, req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "https://e-sirefront-end-web.vercel.app");
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   next();
+//   console.log("Error: ", error.message);
+//   res.status(500).json({error: error.message})
+// });
+
+
+const PORT = process.env.PORT || 8080;
 
 connectDB().then(() => {
   app.listen(PORT, () => {
