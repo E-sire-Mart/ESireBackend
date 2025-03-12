@@ -20,28 +20,43 @@ import orderRouter from "./route/order.route.js";
 const app = express();
 
 const server = http.createServer(app);
+const PORT = process.env.PORT || 8080;
 
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-  }
-})
-app.use(
-  cors({
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    origin: process.env.FRONTEND_URL,
-  })
-);
+const allowedOrigins = [process.env.FRONTEND_URL, "http://localhost:3000"]
+const corsOptions = {
+  origin: function (origin, callback) {
+    if(!origin || allowedOrigins.includes(origin)){
+      callback(null, true); // Allow requests from all origins
+    }
+    else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true, // Allow credentials (cookies, HTTP authentication)
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+};
+
+
+app.use(cors(corsOptions)); // Enable CORS with options
 app.use(express.json());
 app.use(cookieParser());
-app.use(morgan());
+app.use(morgan("dev"));
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
   })
 );
-// 
+
+
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigins,
+    methods: ["GET", "POST"]
+  }
+})
+
+// socket.io setup
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
@@ -52,14 +67,6 @@ io.on("connection", (socket) => {
     console.log(`User disconnected: ${socket.id}`);
   })
 })
-const PORT = 8080 || process.env.PORT;
-
-app.get("/", (request, response) => {
-  ///server to client
-  response.json({
-    message: "Server is running " + PORT,
-  });
-});
 
 app.use("/api/user", userRouter);
 app.use("/api/category", categoryRouter);
@@ -69,6 +76,19 @@ app.use("/api/product", productRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/address", addressRouter);
 app.use("/api/order", orderRouter);
+
+
+app.get("/", (request, response) => {
+  ///server to client
+  response.json({
+    message: "Server is running " + PORT,
+  });
+});
+
+app.use((error, req, res, next) => {
+  console.log("Error: ", error.message);
+  res.status(500).json({error: error.message})
+});
 
 connectDB().then(() => {
   app.listen(PORT, () => {
