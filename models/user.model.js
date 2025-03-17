@@ -56,9 +56,9 @@ const userSchema = new mongoose.Schema(
     ],
     products: [
       {
-        type:mongoose.Schema.ObjectId,
-        ref: "product"
-      }
+        type: mongoose.Schema.ObjectId,
+        ref: "product",
+      },
     ],
     shopping_cart: [
       {
@@ -84,6 +84,23 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["VENDOR", "USER"],
       default: "USER",
+    },
+    Premium: {
+      type: String,
+      enum: ["Free", "Standard", "Elite", "Proffessional", "Premium"],
+      default: "Free",
+    },
+    Products_Number: {
+      type: Number,
+      default: 0,
+    },
+    Product_description_id: {
+      type: Number,
+      default: "",
+    },
+    Product_Current_number: {
+      type: Number,
+      default: 0,
     },
   },
   {

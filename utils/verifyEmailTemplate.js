@@ -170,11 +170,16 @@ const verifyEmailTemplate = (name, otp, verifyType) => {
     <div class="email-container">
       <div class="header" style="margin-bottom: 20px">
         <img
-          src=""
+          src="https://res.cloudinary.com/e-siremart/image/upload/v1742214507/logo_qgblmr.png"
           alt="E-sireMart logo"
           style="max-width: 200px; height: auto"
         />
       </div>
+      <div style="width: 100%" >
+      <img
+      src="https://res.cloudinary.com/e-siremart/image/upload/v1742214507/background_sfg4kk.png"
+      alt="E-siremart back"
+      /></div>
       <p class="section-title1">Confirm your email address</p>
 
       <p class="section-content">Hello, dear ${name}. Welcome to E-sire Mart</p>
@@ -193,7 +198,7 @@ const verifyEmailTemplate = (name, otp, verifyType) => {
         <tr>
           <td style="width: 50%; text-align: left; padding: 0 10px">
             <img
-              src=""
+              src="./assets/logo.png"
               alt="E-siremart Logo"
               style="height: 40px; vertical-align: middle"
             />
@@ -201,31 +206,31 @@ const verifyEmailTemplate = (name, otp, verifyType) => {
           <td style="width: 50%; text-align: right; padding: 0 10px">
             <a href="#"
               ><img
-                src="https://storage.googleapis.com//twitter-new-2023-x-logo-white-background-vector_1017-45422.jpg"
+                src="https://storage.googleapis.com/twitter-new-2023-x-logo-white-background-vector_1017-45422.jpg"
                 alt="Twitter"
                 style="width: 25px; height: 25px; margin-left: 5px"
             /></a>
             <a href="#"
               ><img
-                src="https://storage.googleapis.com//facebook-svgrepo-com.png"
+                src="https://storage.googleapis.com/facebook-svgrepo-com.png"
                 alt="Facebook"
                 style="width: 25px; height: 25px; margin-left: 5px"
             /></a>
             <a href="#"
               ><img
-                src="https://storage.googleapis.com//linkedin--com.png"
+                src="https://storage.googleapis.com/linkedin--com.png"
                 alt="LinkedIn"
                 style="width: 25px; height: 25px; margin-left: 5px"
             /></a>
             <a href="#"
               ><img
-                src="https://storage.googleapis.com//youtube-168-svgrepo-com.png"
+                src="https://storage.googleapis.com/youtube-168-svgrepo-com.png"
                 alt="YouTube"
                 style="width: 25px; height: 25px; margin-left: 5px"
             /></a>
             <a href="#"
               ><img
-                src="https://storage.googleapis.com//instagram-167-svgrepo-com.png"
+                src="https://storage.googleapis.com/instagram-167-svgrepo-com.png"
                 alt="Instagram"
                 style="width: 25px; height: 25px; margin-left: 5px"
             /></a>
@@ -426,9 +431,15 @@ const verifyEmailTemplate = (name, otp, verifyType) => {
     <div class="email-container">
       <div class="header" style="margin-bottom: 20px">
         <img
-          src=""
+          src="https://res.cloudinary.com/e-siremart/image/upload/v1742214507/logo_qgblmr.png"
           alt="E-sireMart logo"
           style="max-width: 200px; height: auto"
+        />
+      </div>
+      <div style="width: 100%" >
+       <img
+        src="https://res.cloudinary.com/e-siremart/image/upload/v1742214507/background_sfg4kk.png"
+        alt="E-siremart back"
         />
       </div>
       <p class="section-title1">Confirm your email address</p>
@@ -457,31 +468,31 @@ const verifyEmailTemplate = (name, otp, verifyType) => {
           <td style="width: 50%; text-align: right; padding: 0 10px">
             <a href="#"
               ><img
-                src="https://storage.googleapis.com//twitter-new-2023-x-logo-white-background-vector_1017-45422.jpg"
+                src="https://storage.googleapis.com/twitter-new-2023-x-logo-white-background-vector_1017-45422.jpg"
                 alt="Twitter"
                 style="width: 25px; height: 25px; margin-left: 5px"
             /></a>
             <a href="#"
               ><img
-                src="https://storage.googleapis.com//facebook-svgrepo-com.png"
+                src="https://storage.googleapis.com/facebook-svgrepo-com.png"
                 alt="Facebook"
                 style="width: 25px; height: 25px; margin-left: 5px"
             /></a>
             <a href="#"
               ><img
-                src="https://storage.googleapis.com//linkedin--com.png"
+                src="https://storage.googleapis.com/linkedin--com.png"
                 alt="LinkedIn"
                 style="width: 25px; height: 25px; margin-left: 5px"
             /></a>
             <a href="#"
               ><img
-                src="https://storage.googleapis.com//youtube-168-svgrepo-com.png"
+                src="https://storage.googleapis.com/youtube-168-svgrepo-com.png"
                 alt="YouTube"
                 style="width: 25px; height: 25px; margin-left: 5px"
             /></a>
             <a href="#"
               ><img
-                src="https://storage.googleapis.com//instagram-167-svgrepo-com.png"
+                src="https://storage.googleapis.com/instagram-167-svgrepo-com.png"
                 alt="Instagram"
                 style="width: 25px; height: 25px; margin-left: 5px"
             /></a>
