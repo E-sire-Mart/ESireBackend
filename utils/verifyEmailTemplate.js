@@ -24,9 +24,20 @@ const verifyEmailTemplate = (name, otp, verifyType) => {
       }
       .header {
         margin-bottom: 20px;
+        display: flex;
+        flex-direction:column;
+        justify-content: center;
+        align-center: center;
+      }
+      .header div {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-center:center;
       }
       .header img {
         max-width: 100%;
+
         border-radius: 10px;
       }
       .otp-section {
@@ -168,14 +179,14 @@ const verifyEmailTemplate = (name, otp, verifyType) => {
   </head>
   <body>
     <div class="email-container">
-      <div class="header" style="margin-bottom: 20px">
+      <div class="header" style="margin-bottom: 20px; width: 100%;">
         <img
-          src="https://res.cloudinary.com/e-siremart/image/upload/v1742214507/logo_qgblmr.png"
+          src="https://res.cloudinary.com/e-siremart/image/upload/v1742215222/siremartBLogo_m6viay.png"
           alt="E-sireMart logo"
-          style="max-width: 200px; height: auto"
+          style="width:50px"
         />
       </div>
-      <div style="width: 100%" >
+      <div>
       <img
       src="https://res.cloudinary.com/e-siremart/image/upload/v1742214507/background_sfg4kk.png"
       alt="E-siremart back"
@@ -242,7 +253,7 @@ const verifyEmailTemplate = (name, otp, verifyType) => {
       <tr>
         <td style="color: #666">
           <p class="section-content125">
-            This email was intended for mykolan@e-siremart.com.<br />Learn why we
+            This email was intended for info@e-siremart.com.<br />Learn why we
             included this email.
           </p>
           <p>
@@ -429,11 +440,11 @@ const verifyEmailTemplate = (name, otp, verifyType) => {
   </head>
   <body>
     <div class="email-container">
-      <div class="header" style="margin-bottom: 20px">
+      <div class="header" style="margin-bottom: 20px; width: 100%;">
         <img
           src="https://res.cloudinary.com/e-siremart/image/upload/v1742214507/logo_qgblmr.png"
           alt="E-sireMart logo"
-          style="max-width: 200px; height: auto"
+          style="max-width: 50px;width:50px"
         />
       </div>
       <div style="width: 100%" >
@@ -504,7 +515,7 @@ const verifyEmailTemplate = (name, otp, verifyType) => {
       <tr>
         <td style="color: #666">
           <p class="section-content125">
-            This email was intended for mykolan@e-siremart.com.<br />Learn why we
+            This email was intended for info@e-siremart.com.<br />Learn why we
             included this email.
           </p>
           <p>
