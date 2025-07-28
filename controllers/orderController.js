@@ -11,6 +11,8 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = "whsec_omar";
 const razorpaySecretKey = process.env.RAZOR_PAY_KEY_SECRET;
 const razorpayKeyId = process.env.RAZOR_PAY_KEY_ID;
+const ADMIN_URL = process.env.ADMIN_URL;
+const CLIENT_URL = process.env.CLIENT_URL;
 //Get Order Counts
 
 const getCheckoutSession = async (req, res) => {
@@ -42,7 +44,7 @@ const getCheckoutSession = async (req, res) => {
         quantity: item.quantity,
       })),
       mode: "payment",
-      success_url: `http://localhost:8080/api/v1/orders/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${ADMIN_URL}/api/v1/orders/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.protocol}://${req.get("host")}/api/v1/cart/`,
       metadata: { customerId: customer || req.user.userId },
     });
@@ -99,7 +101,7 @@ const handleSuccess = async (req, res) => {
     );
 
     console.log("Order placed successfully:", newOrder);
-    res.redirect("http://localhost:3000/");
+    res.redirect(`${CLIENT_URL}`);
   } else {
     res.send("Payment not completed.");
   }

@@ -2,6 +2,7 @@
 const User = require("../models/User");
 const Shop = require("../models/Shop");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer")
 const { JWT_SECRET, CUSTOMER_URL, SHOP_URL, API_URL } = process.env;
 const crypto = require("crypto");
 const sendEmail = require("../utils/emailConnection");
@@ -10,6 +11,20 @@ const generateVerifyToken = () => {
 };
 
 const bcrypt = require("bcrypt");
+
+const CLIENT_URL = process.env.CLIENT_URL;
+const VENDER_URL = process.env.VENDER_URL;
+const ADMIN_URL = process.env.ADMIN_URL;
+
+// console.log("-----------------", ADMIN_URL, CLIENT_URL, VENDER_URL)
+
+// const transporter = nodemailer.createTransport({
+//   service:"Gmail",
+//   auth:{
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS
+//   },
+// })
 
 const ownerRegister = async (req, res) => {
   try {
@@ -499,8 +514,8 @@ const verify = async (req, res) => {
     }
 
     const redirectUrl = user.is_owner
-      ? `${SHOP_URL}/auth/login`
-      : `${CUSTOMER_URL}`;
+      ? `${`${VENDER_URL}auth/login?verified=true`}/auth/login`
+      : `${`${CLIENT_URL}auth/register?verified=true`}`;
     return res.redirect(redirectUrl);
   } catch (error) {
     console.error("Verification Error:", error);
@@ -684,6 +699,18 @@ const loginAsAdmin = async (req, res) => {
   }
 };
 
+const resend_verify =async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(404).json({ message: "User not found" });
+  if (user.isVerified) return res.status(400).json({ message: "Already verified" });
+
+  user.verify_token = crypto.randomBytes(32).toString("hex");
+  await user.save();
+  await sendEmail(user.email, user.verify_token);
+  res.json({ message: "Verification email resent" });
+};
+
 
 // const loginAsAdmin = async (req, res) => {
 
@@ -733,6 +760,8 @@ const loginAsAdmin = async (req, res) => {
 //   }
 // }
 
+
+
 module.exports = {
   ownerRegister,
   login,
@@ -748,5 +777,6 @@ module.exports = {
   userRegisterApp,
   deliverymanLogin,
   loginWithGoogle,
-  loginAsAdmin
+  loginAsAdmin,
+  resend_verify
 };
