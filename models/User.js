@@ -101,6 +101,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       required: false,
       default: false
+    },
+    avatar: {
+      type:String,
+      required: false,
     }
   },
   { strict: false }

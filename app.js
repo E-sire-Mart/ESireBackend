@@ -16,6 +16,8 @@ const connectDB = require("./db/connection");
 // Initialize Express app
 const app = express();
 
+
+app.use('/uploads', express.static('uploads'));
 // Create an HTTP server with Express
 const server = http.createServer(app);
 
@@ -65,6 +67,9 @@ const shopRouter = require("./routes/shops");
 const orderRouter = require("./routes/order");
 const cartRouter = require("./routes/cart");
 const notificationRouter = require("./routes/notification");
+const payment = require('./routes/payment')
+// In your app.js file, add this line with your other routes
+
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -73,7 +78,8 @@ app.get("/", (req, res) => {
 
 // Register routes with base paths
 app.use("/api/v1/auth", authRouter);
-app.get("/api/v1/orders/success", handleSuccess); // Handle Stripe success callback
+app.get("/api/v1/orders/success", handleSuccess);
+// app.use('/uploads', express.static('uploads')) // Handle Stripe success callback
 
 // Uncomm/.well-known/acme-challenge/ent the following line if authentication is required for all routes
 // app.use(authenticate); 
@@ -89,6 +95,8 @@ app.use("/api/v1/shop", shopRouter);
 app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/notification", notificationRouter);
+// In your app.js file, add this line with your other routes
+app.use('/api/v1/payment', require('./routes/payment'));
 
 // Socket.IO setup for handling WebSocket connections
 io.on("connection", (socket) => {

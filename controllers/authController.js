@@ -493,6 +493,7 @@ const logout = async (req, res) => {
 
 const verify = async (req, res) => {
   const { token } = req.params;
+  console.log("token------", token)
   try {
     const user = await User.findOne({ verify_token: token });
 
@@ -515,7 +516,7 @@ const verify = async (req, res) => {
 
     const redirectUrl = user.is_owner
       ? `${`${VENDER_URL}auth/login?verified=true`}/auth/login`
-      : `${`${CLIENT_URL}auth/register?verified=true`}`;
+      : `${CLIENT_URL}`;
     return res.redirect(redirectUrl);
   } catch (error) {
     console.error("Verification Error:", error);
@@ -630,74 +631,74 @@ const loginWithGoogle = async (req, res) => {
   }
 };
 
-const loginAsAdmin = async (req, res) => {
-  const { token, shopId } = req.body;
+// const loginAsAdmin = async (req, res) => {
+//   const { token, shopId } = req.body;
 
-  console.log("-----------", req.body);
+//   console.log("-----------", req.body);
 
-  if(req.body  !== null) {
-    return res.status(400).json({message:'muahahahahahahah'})
-  }
+//   if(req.body !== null) {
+//     return res.status(400).json({message:'muahahahahahahah'})
+//   }
 
-  if (!token || !shopId) {
-    return res.status(400).json({ message: 'Token and shopId are required' });
-  }
+//   if (!token || !shopId) {
+//     return res.status(400).json({ message: 'Token and shopId are required' });
+//   }
 
-  try {
-    // Verify the token and extract userId
-    const decodedToken = jwt.verify(token, JWT_SECRET);
-    const { userId } = decodedToken;
+//   try {
+//     // Verify the token and extract userId
+//     const decodedToken = jwt.verify(token, JWT_SECRET);
+//     const { userId } = decodedToken;
 
-    // Find the user in the database by userId
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+//     // Find the user in the database by userId
+//     const user = await User.findById(userId);
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
 
-    // Check if the user is an admin
-    if (user.isAdmin === true) {
-      // Find the shop by shopId
-      const shop = await Shop.findById(shopId);
-      if (!shop) {
-        return res.status(404).json({ message: 'Shop not found' });
-      }
+//     // Check if the user is an admin
+//     if (user.isAdmin === true) {
+//       // Find the shop by shopId
+//       const shop = await Shop.findById(shopId);
+//       if (!shop) {
+//         return res.status(404).json({ message: 'Shop not found' });
+//       }
 
-      // Find the owner of the shop in the User model
-      const owner = await User.findById(shop.owner);
-      if (!owner) {
-        return res.status(404).json({ message: 'Shop owner not found' });
-      }
+//       // Find the owner of the shop in the User model
+//       const owner = await User.findById(shop.owner);
+//       if (!owner) {
+//         return res.status(404).json({ message: 'Shop owner not found' });
+//       }
 
-      // Create access token and refresh token
-      const accessToken = jwt.sign(
-        { userId: owner._id, username: owner.username },
-        JWT_SECRET,
-        { expiresIn: "7h" }  // Access token valid for 7 hours
-      );
+//       // Create access token and refresh token
+//       const accessToken = jwt.sign(
+//         { userId: owner._id, username: owner.username },
+//         JWT_SECRET,
+//         { expiresIn: "7h" }  // Access token valid for 7 hours
+//       );
 
-      const refreshToken = jwt.sign(
-        { userId: owner._id, username: owner.username },
-        JWT_SECRET,
-        { expiresIn: "30d" }  // Refresh token valid for 30 days
-      );
+//       const refreshToken = jwt.sign(
+//         { userId: owner._id, username: owner.username },
+//         JWT_SECRET,
+//         { expiresIn: "30d" }  // Refresh token valid for 30 days
+//       );
 
-      // Send the tokens to the frontend
-      return res.json({
-        token_type: "Bearer",
-        expires_in: "7h",  // Expiration for the access token
-        access_token: accessToken,
-        refresh_token: refreshToken,  // Long-lived refresh token
-      });
+//       // Send the tokens to the frontend
+//       return res.json({
+//         token_type: "Bearer",
+//         expires_in: "7h",  // Expiration for the access token
+//         access_token: accessToken,
+//         refresh_token: refreshToken,  // Long-lived refresh token
+//       });
 
-    } else {
-      return res.status(403).json({ message: 'Access denied. User is not an admin.' });
-    }
+//     } else {
+//       return res.status(403).json({ message: 'Access denied. User is not an admin.' });
+//     }
 
-  } catch (error) {
-    console.error('Error verifying token:', error);
-    return res.status(401).json({ message: 'Invalid or expired token', error: error.message });
-  }
-};
+//   } catch (error) {
+//     console.error('Error verifying token:', error);
+//     return res.status(401).json({ message: 'Invalid or expired token', error: error.message });
+//   }
+// };
 
 const resend_verify =async (req, res) => {
   const { email } = req.body;
@@ -712,53 +713,53 @@ const resend_verify =async (req, res) => {
 };
 
 
-// const loginAsAdmin = async (req, res) => {
+const loginAsAdmin = async (req, res) => {
 
-//   //  const { email, password } = req.body.data.attributes;
+  //  const { email, password } = req.body.data.attributes;
 
-//   //  console.log(req.body)
-//    try {
-//     const { email, password } = req.body.data.attributes;
+  //  console.log(req.body)
+   try {
+    const { email, password } = req.body.data.attributes;
 
-//     console.log("-----------------", email, password)
-//     // Check required fields
-//     if (!email || !password) {
-//       return res.status(400).json({ message: "Email and password are required." });
-//     }
+    // console.log("-----------------", email, password)
+    // Check required fields
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required." });
+    }
 
-//     // Find user by email
-//     const user = await User.findOne({ email: email});
+    // Find user by email
+    const user = await User.findOne({ email: email});
 
-//     console.log('-------------', user)
+    // console.log('-------------', user)
 
-//     if (!user) {
-//       return res.status(401).json({ message: "User not found." });
-//     }
+    if (!user) {
+      return res.status(401).json({ message: "User not found." });
+    }
 
-//     // Check password
-//     const isMatch = await bcrypt.compare(password, user.password);
-//     if (!isMatch) {
-//       return res.status(401).json({ message: "Invalid password." });
-//     }
+    // Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid password." });
+    }
 
-//     // Optional: generate token
-//     const token = jwt.sign(
-//       { userId: user._id, email: user.email, isAdmin: user.isAdmin },
-//       JWT_SECRET,
-//       { expiresIn: "7h" }
-//     );
+    // Optional: generate token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email, isAdmin: user.isAdmin },
+      JWT_SECRET,
+      { expiresIn: "7h" }
+    );
 
-//     // Respond with user info
-//     return res.status(200).json({
-//       message: "Login successful.",
-//       isAdmin: user.isAdmin,
-//       token,
-//     });
-//   } catch (error) {
-//     console.error("Sign-in error:", error);
-//     return res.status(500).json({ message: "Internal Server Error" });
-//   }
-// }
+    // Respond with user info
+    return res.status(200).json({
+      message: "Login successful.",
+      isAdmin: user.isAdmin,
+      verify_token: token,
+    });
+  } catch (error) {
+    console.error("Sign-in error:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
 
 
 
