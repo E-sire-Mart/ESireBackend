@@ -81,5 +81,6 @@ router.get("/profile", authenticate, userController.getUserProfile);
 router.put("/change-password", authenticate, passwordChangeValidationRules, userController.changePassword);
 router.put("/:userId", userController.updateUser)
 router.put("/users/:userId/address", userController.updateAddressUser);
-router.post("/fileuploads", upload.single('file'), userController.uploadFile)
+router.post("/fileuploads", upload.single('file'), userController.uploadFile);
+router.post("/find-by-email", authenticate, userController.findUserByEmail);
 module.exports = router;

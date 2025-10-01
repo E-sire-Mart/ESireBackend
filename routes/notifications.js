@@ -1,14 +1,13 @@
-// routes/shops.js
 const express = require('express');
 const mongoose = require('mongoose');
-const router = express.Router();
-const Notifications = require('../controllers/notificationController');
-const { authenticate } = require("../middleware/auth");
+const { authenticate } = require('../middleware/auth');
 
-// Define notification schema inline for comment notifications
-const CommentNotificationSchema = new mongoose.Schema({
+const router = express.Router();
+
+// Define notification schema inline
+const NotificationSchema = new mongoose.Schema({
   userId: { type: String, required: true, index: true },
-     type: { type: String, enum: ['comment_reply', 'new_comment', 'comment_resolved', 'comment_deleted'], required: true },
+  type: { type: String, enum: ['comment_reply', 'new_comment', 'comment_resolved'], required: true },
   title: { type: String, required: true },
   message: { type: String, required: true },
   relatedId: { type: String }, // comment ID or reply ID
@@ -18,13 +17,10 @@ const CommentNotificationSchema = new mongoose.Schema({
   metadata: { type: mongoose.Schema.Types.Mixed, default: {} } // store additional info like sender name, store name, etc.
 });
 
-const CommentNotification = mongoose.models.CommentNotification || mongoose.model('CommentNotification', CommentNotificationSchema);
+const Notification = mongoose.models.Notification || mongoose.model('Notification', NotificationSchema);
 
-// Existing shop notification route
-router.get('/', authenticate, Notifications.getShopNotification);
-
-// Get user's comment notifications
-router.get('/comments', authenticate, async (req, res) => {
+// Get user's notifications
+router.get('/', authenticate, async (req, res) => {
   try {
     const user = req.user || {};
     const { unreadOnly, limit = 50 } = req.query;
@@ -34,23 +30,23 @@ router.get('/comments', authenticate, async (req, res) => {
       query.isRead = false;
     }
     
-    const notifications = await CommentNotification.find(query)
+    const notifications = await Notification.find(query)
       .sort({ createdAt: -1 })
       .limit(parseInt(limit))
       .lean();
     
     return res.json({ success: true, data: notifications });
   } catch (err) {
-    console.error('Get comment notifications error:', err);
+    console.error('Get notifications error:', err);
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
 
-// Mark comment notification as read
-router.patch('/comments/:id/read', authenticate, async (req, res) => {
+// Mark notification as read
+router.patch('/:id/read', authenticate, async (req, res) => {
   try {
     const user = req.user || {};
-    const notification = await CommentNotification.findOneAndUpdate(
+    const notification = await Notification.findOneAndUpdate(
       { _id: req.params.id, userId: user._id || user.id || user.userId },
       { $set: { isRead: true } },
       { new: true }
@@ -62,39 +58,39 @@ router.patch('/comments/:id/read', authenticate, async (req, res) => {
     
     return res.json({ success: true, data: notification });
   } catch (err) {
-    console.error('Mark comment notification read error:', err);
+    console.error('Mark notification read error:', err);
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
 
-// Mark all comment notifications as read
-router.patch('/comments/read-all', authenticate, async (req, res) => {
+// Mark all notifications as read
+router.patch('/read-all', authenticate, async (req, res) => {
   try {
     const user = req.user || {};
-    const result = await CommentNotification.updateMany(
+    const result = await Notification.updateMany(
       { userId: user._id || user.id || user.userId, isRead: false },
       { $set: { isRead: true } }
     );
     
     return res.json({ success: true, data: { updatedCount: result.modifiedCount } });
   } catch (err) {
-    console.error('Mark all comment notifications read error:', err);
+    console.error('Mark all notifications read error:', err);
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
 
-// Get unread comment notification count
-router.get('/comments/unread-count', authenticate, async (req, res) => {
+// Get unread count
+router.get('/unread-count', authenticate, async (req, res) => {
   try {
     const user = req.user || {};
-    const count = await CommentNotification.countDocuments({
+    const count = await Notification.countDocuments({
       userId: user._id || user.id || user.userId,
       isRead: false
     });
     
     return res.json({ success: true, data: { count } });
   } catch (err) {
-    console.error('Get unread comment count error:', err);
+    console.error('Get unread count error:', err);
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });

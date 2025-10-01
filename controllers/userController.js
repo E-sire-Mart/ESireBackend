@@ -26,6 +26,41 @@ const getUsersCounts = async (req, res) => {
   }
 };
 
+// Find user by email for recommendations
+const findUserByEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() }).select('_id name email');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found with this email address",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error("Error finding user by email:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
 const getAllUsers = async (req, res) => {
   const isAdmin = await checkAdminStatus(req.user.userId);
   if (!isAdmin)
@@ -68,6 +103,7 @@ const getAllUsers = async (req, res) => {
 };
 
 const getDeliveryPeople = async (req, res) => {
+  // console.log("5555555555555555555")
   const userId = req.user.userId;
   const user = await User.findById(userId);
   if (user.is_owner) {
@@ -539,5 +575,6 @@ module.exports = {
   getDeliveryPeople,
   deleteDeliveryPerson,
   uploadFile,
-  changePassword
+  changePassword,
+  findUserByEmail
 };

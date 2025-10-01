@@ -1,3 +1,237 @@
+// utils/sendEmail.js
+// const { MailSlurp } = require("mailslurp-client");
+// const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY });
+
+// const sendEmail = async (toEmail, token) => {
+//   const verificationUrl = `${process.env.SERVER_URL}api/v1/auth/verify/${token}`;
+//   const inboxId = process.env.FROM_EMAIL.split("@")[0];
+
+//   console.log("📨 Sending to:", toEmail);
+//   console.log("🔗 Link:", verificationUrl);
+
+//   const htmlContent = `
+//     <!DOCTYPE html>
+//     <html>
+//       <head>
+//         <meta charset="UTF-8" />
+//         <title>Verify Your Email</title>
+//       </head>
+//       <body style="background-color:#f4f4f4;margin:0;padding:20px;font-family:Arial,sans-serif;">
+//         <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:auto;background:#ffffff;border-radius:12px;box-shadow:0 0 10px rgba(0,0,0,0.1);">
+//           <tr>
+//             <td style="background-color:#0d6efd;padding:20px;text-align:center;border-top-left-radius:12px;border-top-right-radius:12px;">
+//               <img src="https://localhost:3003/uploads/images-1752702688792-315027150.png?text=Logo" alt="Logo" style="border-radius:50%;" />
+//               <h1 style="color:#ffffff;margin:10px 0 0;">E-SireMart</h1>
+//             </td>
+//           </tr>
+//           <tr>
+//             <td style="padding:30px;text-align:center;">
+//               <h2 style="color:#333333;">Confirm your email address</h2>
+//               <p style="color:#555555;font-size:16px;">
+//                 Thanks for signing up with <strong>E-SireMart</strong>!<br/>
+//                 Please confirm your email by clicking the button below.
+//               </p>
+//               <a href="${verificationUrl}" style="display:inline-block;margin:30px 0;padding:15px 30px;background-color:#0d6efd;color:#ffffff;text-decoration:none;font-size:16px;border-radius:8px;">
+//                 Verify Email
+//               </a>
+//               <p style="color:#999999;font-size:12px;">If you didn't create this account, you can safely ignore this email.</p>
+//             </td>
+//           </tr>
+//           <tr>
+//             <td style="background-color:#f8f9fa;padding:20px;text-align:center;border-bottom-left-radius:12px;border-bottom-right-radius:12px;">
+//               <p style="color:#888888;font-size:13px;margin:0;">
+//                 Contact us at <a href="mailto:support@E-SireMart.com" style="color:#0d6efd;">support@E-SireMart.com</a><br/>
+//                 E-SireMart, 1234 Web Street, Amsterdam, NL
+//               </p>
+//             </td>
+//           </tr>
+//         </table>
+//       </body>
+//     </html>
+//   `;
+
+//   try {
+//     await mailslurp.sendEmail(inboxId, {
+//       to: [toEmail],
+//       subject: "Verify your email",
+//       body: htmlContent,
+//       isHTML: true,
+//     });
+
+//     console.log("✅ Email sent successfully!");
+//   } catch (error) {
+//     console.error("❌ Failed to send email:", error);
+//   }
+// };
+
+// module.exports = sendEmail;
+
+
+
+
+
+
+
+
+
+
+
+// const SibApiV3Sdk = require("sib-api-v3-sdk");
+// const defaultClient = SibApiV3Sdk.ApiClient.instance;
+
+// const apiKey = defaultClient.authentications["api-key"];
+// apiKey.apiKey = process.env.BREVO_API_KEY;
+
+// const sendEmail = async (email, token) => {
+//   const verificationUrl = `${process.env.SERVER_URL}api/v1/auth/verify/${token}`;
+
+//   console.log("📨 Sending to:", email);
+//   console.log("🔗 Link:", verificationUrl);
+
+//   const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+//   const sender = { email: process.env.FROM_EMAIL, name: "E-SireMart" };
+//   const receivers = [{ email }];
+
+//   const htmlContent = `
+//     <!DOCTYPE html>
+//     <html>
+//       <head>
+//         <meta charset="UTF-8" />
+//         <title>Verify Your Email</title>
+//       </head>
+//       <body style="background-color:#f4f4f4;margin:0;padding:20px;font-family:Arial,sans-serif;">
+//         <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:auto;background:#ffffff;border-radius:12px;box-shadow:0 0 10px rgba(0,0,0,0.1);">
+//           <tr>
+//             <td style="background-color:#0d6efd;padding:20px;text-align:center;border-top-left-radius:12px;border-top-right-radius:12px;">
+//               <img src="https://localhost:3003/uploads/images-1752702688792-315027150.png?text=Logo" alt="Logo" style="border-radius:50%;" />
+//               <h1 style="color:#ffffff;margin:10px 0 0;">E-SireMart</h1>
+//             </td>
+//           </tr>
+//           <tr>
+//             <td style="padding:30px;text-align:center;">
+//               <h2 style="color:#333333;">Confirm your email address</h2>
+//               <p style="color:#555555;font-size:16px;">
+//                 Thanks for signing up with <strong>E-SireMart</strong>!<br/>
+//                 Please confirm your email by clicking the button below.
+//               </p>
+//               <a href="${verificationUrl}" style="display:inline-block;margin:30px 0;padding:15px 30px;background-color:#0d6efd;color:#ffffff;text-decoration:none;font-size:16px;border-radius:8px;">
+//                 Verify Email
+//               </a>
+//               <p style="color:#999999;font-size:12px;">If you didn't create this account, you can safely ignore this email.</p>
+//             </td>
+//           </tr>
+//           <tr>
+//             <td style="background-color:#f8f9fa;padding:20px;text-align:center;border-bottom-left-radius:12px;border-bottom-right-radius:12px;">
+//               <p style="color:#888888;font-size:13px;margin:0;">
+//                 Contact us at <a href="mailto:support@E-SireMart.com" style="color:#0d6efd;">support@E-SireMart.com</a><br/>
+//                 E-SireMart, 1234 Web Street, Amsterdam, NL
+//               </p>
+//             </td>
+//           </tr>
+//         </table>
+//       </body>
+//     </html>
+//   `;
+
+//   try {
+//     await apiInstance.sendTransacEmail({
+//       sender,
+//       to: receivers,
+//       subject: "Verify your email",
+//       htmlContent,
+//       textContent: `Please click this link to verify your email: ${verificationUrl}`,
+//     });
+
+//     console.log("✅ Email sent successfully!");
+//   } catch (error) {
+//     console.error("❌ Failed to send email:", error.response?.text || error.message);
+//   }
+// };
+
+// module.exports = sendEmail;
+
+
+
+
+// const axios = require("axios");
+
+// const sendEmail = async (email, token) => {
+//   const apiKey = process.env.MAILERSEND_API_KEY;
+//   const SERVER_URL = process.env.SERVER_URL;
+
+//   const verificationUrl = `${SERVER_URL}api/v1/auth/verify/${token}`;
+//   console.log("📨 Sending to:", email);
+//   console.log("🔗 Link:", verificationUrl);
+
+//   try {
+//     await axios.post(
+//       "https://api.mailersend.com/v1/email",
+//       {
+//         from: {
+//           email: "noreply@test-2p0347zxpyklzdrn.mlsender.net", // your Mailersend verified domain
+//           name: "E-SireMart",
+//         },
+//         to: [{ email }],
+//         subject: "Verify your email",
+//         html: `
+//           <!DOCTYPE html>
+//           <html>
+//             <head>
+//               <meta charset="UTF-8" />
+//               <title>Verify Your Email</title>
+//             </head>
+//             <body style="background-color:#f4f4f4;margin:0;padding:20px;font-family:Arial,sans-serif;">
+//               <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:auto;background:#ffffff;border-radius:12px;box-shadow:0 0 10px rgba(0,0,0,0.1);">
+//                 <tr>
+//                   <td style="background-color:#0d6efd;padding:20px;text-align:center;border-top-left-radius:12px;border-top-right-radius:12px;">
+//                     <img src="https://localhost:3003/uploads/images-1752702688792-315027150.png?text=Logo" alt="Logo" style="border-radius:50%;" />
+//                     <h1 style="color:#ffffff;margin:10px 0 0;">E-SireMart</h1>
+//                   </td>
+//                 </tr>
+//                 <tr>
+//                   <td style="padding:30px;text-align:center;">
+//                     <h2 style="color:#333333;">Confirm your email address</h2>
+//                     <p style="color:#555555;font-size:16px;">
+//                       Thanks for signing up with <strong>E-SireMart</strong>!<br/>
+//                       Please confirm your email by clicking the button below.
+//                     </p>
+//                     <a href="${verificationUrl}" style="display:inline-block;margin:30px 0;padding:15px 30px;background-color:#0d6efd;color:#ffffff;text-decoration:none;font-size:16px;border-radius:8px;">
+//                       Verify Email
+//                     </a>
+//                     <p style="color:#999999;font-size:12px;">If you didn't create this account, you can safely ignore this email.</p>
+//                   </td>
+//                 </tr>
+//                 <tr>
+//                   <td style="background-color:#f8f9fa;padding:20px;text-align:center;border-bottom-left-radius:12px;border-bottom-right-radius:12px;">
+//                     <p style="color:#888888;font-size:13px;margin:0;">
+//                       Contact us at <a href="mailto:support@E-SireMart.com" style="color:#0d6efd;">support@E-SireMart.com</a><br/>
+//                       E-SireMart, 1234 Web Street, Amsterdam, NL
+//                     </p>
+//                   </td>
+//                 </tr>
+//               </table>
+//             </body>
+//           </html>
+//         `,
+//         text: `Please click this link to verify your email: ${verificationUrl}`,
+//       },
+//       {
+//         headers: {
+//           Authorization: `Bearer ${apiKey}`,
+//           "Content-Type": "application/json",
+//         },
+//       }
+//     );
+//   } catch (err) {
+//     console.error("❌ Failed to send email:", err?.response?.data || err.message);
+//   }
+// };
+
+// module.exports = sendEmail;
+
+
+
 // const nodemailer = require("nodemailer");
 // const CLIENT_URL = process.env.CLIENT_URL;
 
@@ -91,7 +325,6 @@ const sendEmail = async (email, token) => {
            <!-- Header -->
            <tr>
              <td style="background-color:#0d6efd;padding:20px;text-align:center;border-top-left-radius:12px;border-top-right-radius:12px;">
-               <img src="https://via.placeholder.com/80x80.png?text=Logo" alt="Logo" style="border-radius:50%;"/>
                <h1 style="color:#ffffff;margin:10px 0 0;">E-SireMart</h1>
              </td>
            </tr>
@@ -132,7 +365,5 @@ const sendEmail = async (email, token) => {
     console.error("❌ Send failed:", err);
   }
 };
-
-
 
 module.exports = sendEmail;

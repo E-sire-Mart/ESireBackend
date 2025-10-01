@@ -5,6 +5,7 @@ const Product = require("../models/Product");
 
 //Get Shops Counts
 const shopsCounts = async (req, res) => {
+  // console.log("hahahahaha")
   try {
     try {
       const counts = await Shop.countDocuments();
@@ -280,6 +281,18 @@ const approveShop = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Lightweight list for selectors: id + name only
+const getShopsBasic = async (req, res) => {
+  try {
+    const shops = await Shop.find({}, { _id: 1, name: 1 }).lean();
+    const data = shops.map(s => ({ id: String(s._id), name: s.name || 'Shop' }));
+    return res.status(200).json({ success: true, data });
+  } catch (error) {
+    console.error('getShopsBasic error:', error);
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
 module.exports = {
   createShop,
   getShopById,
@@ -291,4 +304,5 @@ module.exports = {
   approveShop,
   createShopByAdmin,
   shopsCounts,
+  getShopsBasic,
 };

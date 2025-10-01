@@ -29,8 +29,10 @@ router.post(
 router.post("/search", productController.getAllProducts);
 router.get("/", authenticate, productController.getAllShopProducts);
 router.post("/products", productController.getProducts); // getAllProductList
-router.get("/:id", productController.getProductById);
 router.get("/all/counts", productController.getProductCounts);
+router.get("/counts/by-category", productController.getCountsByCategory);
+router.get("/discounts", productController.getDiscountedProducts);
+router.get("/:id", productController.getProductById);
 router.put(
   "/:id",
   authenticate,

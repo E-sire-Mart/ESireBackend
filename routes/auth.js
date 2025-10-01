@@ -15,11 +15,14 @@ router.post("/userRegisterApp", authController.userRegisterApp);
 router.post("/deliverymanRegister", authController.deliverymanRegister);
 router.post("/deliverymanRegisterWithOwner", authenticate, authController.deliverymanRegisterWithOwner)
 router.post("/deliverymanLogin", authController.deliverymanLogin);
-// router.post("/register", authController.adminregister);
+router.post("/admin-register", authController.adminregister);
 router.post("/logout", authController.logout);
 router.get("/verify/:token", authController.verify);
 router.post("/password-forgot", authController.forgotPassword);
 router.post("/password-reset", authController.resetPassword);
 router.post("/loginAsAdmin", authController.loginAsAdmin);
-router.post("/resend-verification", authController.resend_verify)
+router.post("/resend-verification", authController.resend_verify);
+router.post("/admin-login", authController.adminLogin);
+router.get("/gotomyshop", authController.goToMyShop);
+router.get("/check-store-status", authenticate, authController.checkStoreStatus);
 module.exports = router;

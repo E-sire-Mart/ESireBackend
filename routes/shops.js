@@ -12,11 +12,13 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Define routes
-router.post("/", upload.none(), shopController.createShopByAdmin);
+// Accept JSON payloads from the admin app; no multipart parser is required here
+router.post("/", shopController.createShopByAdmin);
 router.post("/create", shopController.createShop);
 // router.post("/admin/shop", upload.none(), shopController.createShopByAdmin);
 router.get("/", authenticate, shopController.getShopById);
 router.get("/all", shopController.getAllShop);
+router.get("/list-basic", shopController.getShopsBasic);
 router.get("/admin", authenticate, shopController.getAllShopsForAdmin);
 router.put("/", authenticate, upload.none(), shopController.updateShopById);
 router.delete("/:id", shopController.deleteShopById);
